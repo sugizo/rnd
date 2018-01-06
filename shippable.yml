@@ -6,6 +6,5 @@ node_js:
 build:
   cache: true
   ci:
-    - shippable_retry npm install hexo-cli -g
     - shippable_retry npm install
-    - hexo generate
+    - npm run hugo
