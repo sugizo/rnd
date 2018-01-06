@@ -1,0 +1,28 @@
+box: ruby
+build:
+  steps:
+    - script:
+        name: install
+        code: apt install -y sudo curl
+        code: |
+          apt update
+          apt install -y sudo curl
+          curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+          apt update
+          apt install -y nodejs
+          gem install jekyll bundler jekyll-minifier jekyll-sitemap
+    - script:
+        name: build
+        code: jekyll build
+    - script:
+        name: deploy
+        code: |
+          rm -rf sugizo.github.io
+          git clone https://sugizo:${GITHUB_PASSWORD}@github.com/sugizo/sugizo.github.io.git
+          git config --global user.email 'steve.van.christie@gmail.com'
+          git config --global user.name 'sugizo'
+          cp -r _site/* sugizo.github.io/
+          cd sugizo.github.io
+          git add --all
+          git commit -m 'From Wercker'
+          git push -u origin master
