@@ -9,6 +9,8 @@
     execute_commands:
     - "pip install -r requirements.txt"
     - "cactus build"
+    - "git config --global user.email 'steve.van.christie@gmail.com'"
+    - "git config --global user.name 'sugizo'"
     - "git clone https://github.com/sugizo/sugizo.github.io"
     - "cd sugizo.github.io"
     - "git add --all"
