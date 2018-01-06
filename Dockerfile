@@ -1,18 +1,17 @@
-FROM ruby
+FROM composer
 
 #LABEL stifix
 
-RUN apt update && \
- apt install -y sudo curl && \
- curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
- apt update && \
- apt install -y nodejs && \
- gem install jekyll bundler jekyll-minifier jekyll-sitemap 
-
 COPY . /site/
 
-WORKDIR /site
+RUN apk update && \
+ apk --no-cache add python && \
+ cd /site && \
+ composer require tightenco/jigsaw && \
+ ./vendor/bin/jigsaw build
 
-EXPOSE 4000
+EXPOSE 8000
 
-CMD bundle exec jekyll serve --host 0.0.0.0
+WORKDIR /site/build_local
+
+CMD python -m SimpleHTTPServer 8000
