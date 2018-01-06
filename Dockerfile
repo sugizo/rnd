@@ -1,17 +1,12 @@
-FROM ruby
+FROM jekyll
 
 #LABEL stifix
 
-RUN apt update && \
- apt install -y sudo curl && \
- curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
- apt update && \
- apt install -y nodejs && \
- gem install jekyll bundler jekyll-minifier jekyll-sitemap 
+WORKDIR /srv/jekyll
 
-COPY . /site/
+COPY . /srv/jekyll
 
-WORKDIR /site
+RUN chown jekyll:jekyll $WORKDIR 
 
 EXPOSE 4000
 
