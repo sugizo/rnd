@@ -5,7 +5,7 @@ build:
         name: install
         code: |
           apt update
-          apt install -y npm nodejs-legacy
+          apt install -y git npm nodejs-legacy
           npm list harp || npm install harp -g
     - script:
         name: compile
@@ -20,5 +20,5 @@ build:
           cp -r www/* sugizo.github.io/
           cd sugizo.github.io
           git add --all
-          git commit -m 'From Buddy'
+          git commit -m 'From Wercker'
           git push -u origin master
