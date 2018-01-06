@@ -1,24 +1,39 @@
-# Install Jigsaw via Composer
-mkdir -p ~/project/php/jigsaw/stifix
-cd ~/project/php/jigsaw/stifix
-composer show | grep jigsaw || composer require tightenco/jigsaw
-#composer install
+#!/bin/sh
 
-# Initialize a new project in the current folder
-#./vendor/bin/jigsaw init
+start=$(date +%s)
 
-# Install app
-rm -rf ~/project/php/jigsaw/stifix/build_local/*
-rm -rf ~/project/php/jigsaw/stifix/source/*
-rsync -avzr ~/Cloud/MEGA/Git/jigsaw/stifix/* ~/project/php/jigsaw/stifix/
+# Install Package
+source ~/.rvm/scripts/rvm
+gem install jekyll bundler jekyll-minifier jekyll-sitemap
 
-# Build site
-cd ~/project/php/jigsaw/stifix
-./vendor/bin/jigsaw build
+# Create New Site
+mkdir -p ~/project/ruby/jekyll/stifix
+cd ~/project/ruby/jekyll/stifix
+
+# install app
+rm -f ~/project/ruby/jekyll/stifix/*
+rsync -zavr ~/Cloud/MEGA/Git/jekyll/stifix/ ~/project/ruby/jekyll/stifix/
+
+# Serve Site
+source ~/.rvm/scripts/rvm
+cd ~/project/ruby/jekyll/stifix
+bundle exec jekyll serve --host 0.0.0.0
+
+# Access Server via Browser
+#http://localhost:4000
+
+# Generated Static Site is on _site folder
+source ~/.rvm/scripts/rvm
+cd ~/project/ruby/jekyll/stifix
+jekyll build
 
 # Check generated files
-du -hsc ~/project/php/jigsaw/stifix/build_local/
+du -hsc ~/project/ruby/jekyll/stifix/_site/
 
-# Run Web Server
-cd ~/project/php/jigsaw/stifix/build_local
-python -m SimpleHTTPServer 8000
+# check public folder change external js and css into internal (save) then concat and minify it
+
+end=$(date +%s)
+diff=$(( $end - $start ))
+
+echo Duration = $diff Seconds
+echo Finished at = `date +%Y-%m-%d\ %H:%M:%S`

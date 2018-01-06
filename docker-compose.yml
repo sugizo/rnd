@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  jigsaw:
+  jekyll:
     build: .
     ports:
-      - "8000:8000"
+      - "4000:4000"
