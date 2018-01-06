@@ -13,6 +13,7 @@
     - "git config --global user.name 'sugizo'"
     - "rm -rf sugizo.github.io"
     - "git clone https://github.com/sugizo/sugizo.github.io"
+    - "cp -R .build/* sugizo.github.io/"
     - "cd sugizo.github.io"
     - "git add --all"
     - "git commit -m 'From Buddy'"
