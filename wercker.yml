@@ -1,13 +1,12 @@
-box: node
+box: composer
 build:
   steps:
-    #- npm-install
     - script:
         name: install
-        code: npm install
+        code: composer install
     - script:
         name: compile
-        code: npm run compile
+        code: ./vendor/bin/jigsaw build
     - script:
         name: deploy
         code: |
@@ -15,7 +14,7 @@ build:
           git clone https://sugizo:${GITHUB_PASSWORD}@github.com/sugizo/sugizo.github.io.git
           git config --global user.email 'steve.van.christie@gmail.com'
           git config --global user.name 'sugizo'
-          cp -r public/* sugizo.github.io/
+          cp -r build_local/* sugizo.github.io/
           cd sugizo.github.io
           git add --all
           git commit -m 'From Buddy'
