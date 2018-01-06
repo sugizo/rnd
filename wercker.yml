@@ -13,7 +13,7 @@ build:
           gem install jekyll bundler jekyll-minifier jekyll-sitemap
     - script:
         name: build
-        code: jekyll build
+        code: bundle exec jekyll build
     - script:
         name: deploy
         code: |
