@@ -1,33 +1,34 @@
-# Install Package
-#mkdir -p ~/project/js/harp
-#cd ~/project/js/harp
-#npm list harp || npm install harp
-mkdir -p ~/project/js/harp/stifix
-cd ~/project/js/harp/stifix
-npm list harp || npm install
+# Install Package on Virtual Environment
+mkdir ~/project
+cd ~/project
+virtualenv --no-site-packages python
+source python/bin/activate
+pip list | grep Cactus || easy_install cactus
 
-# Initialize Site
-#node_modules/.bin/harp init stifix
+# Create Site
+#cd ~/project
+#source python/bin/activate
+#cactus create ~/project/python/cactus/stifix
 
-# install app
-mkdir -p ~/project/js/harp/stifix/
-rm -rf ~/project/js/harp/stifix/*
-rsync -avuzr ~/Cloud/MEGA/Git/harp/stifix/* ~/project/js/harp/stifix/
+# Install App
+rm -rf ~/project/python/cactus/stifix
+mkdir -p ~/project/python/cactus/stifix
+rsync -avzr ~/Cloud/MEGA/Git/cactus/stifix/0.1/* ~/project/python/cactus/stifix/
 
-# Run App
-#cd ~/project/js/harp/
-#./node_modules/.bin/harp server stifix
-cd ~/project/js/harp/stifix
-./node_modules/.bin/harp server 
+# Serve Site
+cd ~/project
+source python/bin/activate
+cd ~/project/python/cactus/stifix
+cactus serve
 
-# Check App on Browser
-#http://localhost:9000
+# Access via Browser
+#http://localhost:8000
 
-# Compile App
-#cd ~/project/js/harp/
-#./node_modules/.bin/harp compile stifix
-cd ~/project/js/harp/stifix
-./node_modules/.bin/harp compile 
+# Build
+cd ~/project
+source python/bin/activate
+cd ~/project/python/cactus/stifix
+cactus build
 
 # Check generated files
-du -hsc ~/project/js/harp/stifix/www/
+du -hsc ~/project/python/cactus/stifix/.build/

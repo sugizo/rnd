@@ -1,14 +1,12 @@
-FROM ubuntu:latest
+FROM python:2.7
 
 #LABEL stifix
 
+RUN pip install Cactus
+
+EXPOSE 8000
+
 COPY . /site/
-WORKDIR /
+WORKDIR /site
 
-RUN apt update && \
- apt install -y npm nodejs-legacy && \
- npm list harp || npm install harp -g
-
-EXPOSE 9000
-
-CMD harp server site
+CMD cactus serve

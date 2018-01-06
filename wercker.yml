@@ -1,15 +1,12 @@
-box: ubuntu
+box: python:2.7
 build:
   steps:
     - script:
         name: install
-        code: |
-          apt update
-          apt install -y git npm nodejs-legacy
-          npm list harp || npm install harp -g
+        code: pip list | grep Cactus || easy_install cactus
     - script:
-        name: compile
-        code: harp compile
+        name: build
+        code: cactus build
     - script:
         name: deploy
         code: |
@@ -17,7 +14,7 @@ build:
           git clone https://sugizo:${GITHUB_PASSWORD}@github.com/sugizo/sugizo.github.io.git
           git config --global user.email 'steve.van.christie@gmail.com'
           git config --global user.name 'sugizo'
-          cp -r www/* sugizo.github.io/
+          cp -r .build/* sugizo.github.io/
           cd sugizo.github.io
           git add --all
           git commit -m 'From Wercker'
