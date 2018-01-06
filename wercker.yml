@@ -1,9 +1,10 @@
-box: composer
+box: node
 build:
   steps:
+    #- npm-install
     - script:
         name: install
-        code: composer install
+        code: npm install
     - script:
         name: compile
-        code: ./vendor/bin/jigsaw build
+        code: npm run compile

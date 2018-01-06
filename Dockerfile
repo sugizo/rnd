@@ -1,17 +1,13 @@
-FROM composer
+FROM node
 
 #LABEL stifix
 
 COPY . /site/
 
-RUN apk update && \
- apk --no-cache add python && \
- cd /site && \
- composer require tightenco/jigsaw && \
- ./vendor/bin/jigsaw build
+WORKDIR /site
 
-EXPOSE 8000
+RUN npm install
 
-WORKDIR /site/build_local
+EXPOSE 1111
 
-CMD python -m SimpleHTTPServer 8000
+CMD /site/node_modules/.bin/roots watch
