@@ -1,13 +1,14 @@
-FROM node
+FROM ubuntu:latest
 
 #LABEL stifix
 
 COPY . /site/
-WORKDIR /site
+WORKDIR /
 
-RUN npm list hexo-cli || npm install hexo-cli -g && \
- npm install
+RUN apt update && \
+ apt install -y npm nodejs-legacy && \
+ npm list harp || npm install harp -g
 
-EXPOSE 4000
+EXPOSE 9000
 
-CMD hexo server
+CMD harp server site

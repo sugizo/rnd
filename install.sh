@@ -1,41 +1,33 @@
-#!/bin/sh
-
-start=$(date +%s)
-
 # Install Package
-mkdir -p ~/project/js/hexo
-cd ~/project/js/hexo
-#npm install hexo-cli
+#mkdir -p ~/project/js/harp
+#cd ~/project/js/harp
+#npm list harp || npm install harp
+mkdir -p ~/project/js/harp/stifix
+cd ~/project/js/harp/stifix
+npm list harp || npm install
 
-# Initalize Blog
-#./node_modules/.bin/hexo init stifix
+# Initialize Site
+#node_modules/.bin/harp init stifix
 
 # install app
-rm -rf ~/project/js/hexo/stifix/*
-rsync -zavr ~/Cloud/MEGA/Git/hexo/stifix/ ~/project/js/hexo/stifix/
+mkdir -p ~/project/js/harp/stifix/
+rm -rf ~/project/js/harp/stifix/*
+rsync -avuzr ~/Cloud/MEGA/Git/harp/stifix/* ~/project/js/harp/stifix/
 
-# Install Blog
-cd stifix
-npm install
+# Run App
+#cd ~/project/js/harp/
+#./node_modules/.bin/harp server stifix
+cd ~/project/js/harp/stifix
+./node_modules/.bin/harp server 
 
-# Create New Post
-#./node_modules/.bin/hexo new "post"
+# Check App on Browser
+#http://localhost:9000
 
-# Run Server
-./node_modules/.bin/hexo server
-#npm start
+# Compile App
+#cd ~/project/js/harp/
+#./node_modules/.bin/harp compile stifix
+cd ~/project/js/harp/stifix
+./node_modules/.bin/harp compile 
 
-# Access via Browser
-open http://localhost:4000
-
-# Generate Static Site
-./node_modules/.bin/hexo generate
-#npm generate
-
-# check public folder change external js and css into internal (save) then concat and minify it
-
-end=$(date +%s)
-diff=$(( $end - $start ))
-
-echo Duration = $diff Seconds
-echo Finished at = `date +%Y-%m-%d\ %H:%M:%S`
+# Check generated files
+du -hsc ~/project/js/harp/stifix/www/
