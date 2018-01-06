@@ -3,7 +3,6 @@ build:
   steps:
     - script:
         name: install
-        code: apt install -y sudo curl
         code: |
           apt update
           apt install -y sudo curl

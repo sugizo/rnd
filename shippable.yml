@@ -1,0 +1,15 @@
+language: ruby
+
+rvm:
+  - 2.0
+
+build:
+  cache: true
+  ci:
+    - apt update
+    - shippable_retry apt install -y sudo curl
+    - shippable_retry curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+    - apt update
+    - shippable_retry apt install -y nodejs
+    - shippable_retry gem install jekyll bundler jekyll-minifier jekyll-sitemap
+    - jekyll build
