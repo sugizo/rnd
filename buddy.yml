@@ -12,7 +12,7 @@
     - "git clone https://github.com/sugizo/sugizo.github.io"
     - "cd sugizo.github.io"
     - "git add --all"
-    - "git commit -m "Initial Commit""
+    - "git commit -m 'From Buddy'"
     - "git push -u origin master"
     cached_dirs:
     - "/root/.cache/pip"
