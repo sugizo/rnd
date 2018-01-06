@@ -2,13 +2,13 @@
   trigger_mode: "ON_EVERY_PUSH"
   ref_name: "master"
   actions:
-  - action: "Execute: hugo"
+  - action: "Execute: hexo"
     type: "BUILD"
     docker_image_name: "library/node"
     docker_image_tag: "6"
     execute_commands:
     - "npm install"
-    - "npm run hugo"
+    - "hexo generate"
     - "rm -rf sugizo.github.io"
     - "git clone https://sugizo:${GITHUB_PASSWORD}@github.com/sugizo/sugizo.github.io.git"
     - "git config --global user.email 'steve.van.christie@gmail.com'"
@@ -18,4 +18,6 @@
     - "git add --all"
     - "git commit -m 'From Buddy'"
     - "git push -u origin master"
+    setup_commands:
+    - "npm install hexo-cli -g"
     trigger_condition: "ALWAYS"

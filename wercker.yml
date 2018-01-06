@@ -1,12 +1,13 @@
 box: node
 build:
   steps:
+    #- npm-install
     - script:
         name: install
-        code: npm list hugo-cli || npm install -g hugo-cli
+        code: npm install
     - script:
         name: generate
-        code: hugo
+        code: npm run generate
     - script:
         name: deploy
         code: |

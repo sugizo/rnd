@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  hugo:
+  hexo:
     build: .
     ports:
-      - "1313:1313"
+      - "4000:4000"

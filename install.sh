@@ -3,35 +3,34 @@
 start=$(date +%s)
 
 # Install Package
-mkdir -p ~/project/go/hugo
-cd ~/project/go/hugo
-npm list hugo-cli || npm install hugo-cli
+mkdir -p ~/project/js/hexo
+cd ~/project/js/hexo
+#npm install hexo-cli
 
 # Initalize Blog
-rm -rf ~/project/go/hugo/stifix
-mkdir -p ~/project/go/hugo/stifix
-#node_modules/.bin/hugo new site stifix
+#./node_modules/.bin/hexo init stifix
 
 # install app
-rm -rf ~/project/go/hugo/stifix/content/*
-rm -rf ~/project/go/hugo/stifix/layouts/*
-rm -rf ~/project/go/hugo/stifix/public/*
-rm -rf ~/project/go/hugo/stifix/static/*
-rsync -zavr ~/Cloud/MEGA/Git/hugo/stifix/ ~/project/go/hugo/stifix/
+rm -rf ~/project/js/hexo/stifix/*
+rsync -zavr ~/Cloud/MEGA/Git/hexo/stifix/ ~/project/js/hexo/stifix/
+
+# Install Blog
+cd stifix
+npm install
+
+# Create New Post
+#./node_modules/.bin/hexo new "post"
 
 # Run Server
-cd ~/project/go/hugo/stifix
-../node_modules/.bin/hugo server --bind 0.0.0.0 -D
+./node_modules/.bin/hexo server
+#npm start
 
-# Access Server via Browser
-#http://localhost:1313
+# Access via Browser
+open http://localhost:4000
 
-# Generate Static Site Website on folder public
-cd ~/project/go/hugo/stifix
-../node_modules/.bin/hugo
-
-# Check generated files
-du -hsc ~/project/go/hugo/stifix/public/
+# Generate Static Site
+./node_modules/.bin/hexo generate
+#npm generate
 
 # check public folder change external js and css into internal (save) then concat and minify it
 
