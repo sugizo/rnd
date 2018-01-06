@@ -1,0 +1,19 @@
+- pipeline: "build"
+  trigger_mode: "ON_EVERY_PUSH"
+  ref_name: "master"
+  actions:
+  - action: "Execute: cactus"
+    type: "BUILD"
+    docker_image_name: "library/python"
+    docker_image_tag: "2.7"
+    execute_commands:
+    - "pip install -r requirements.txt"
+    - "cactus build"
+    - "git clone https://github.com/sugizo/sugizo.github.io"
+    - "cd sugizo.github.io"
+    - "git add --all"
+    - "git commit -m "Initial Commit""
+    - "git push -u origin master"
+    cached_dirs:
+    - "/root/.cache/pip"
+    trigger_condition: "ALWAYS"
