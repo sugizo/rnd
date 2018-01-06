@@ -1,12 +1,18 @@
-FROM node
+FROM ruby
 
 #LABEL stifix
 
+RUN apt update && \
+ apt install -y sudo curl && \
+ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
+ apt update && \
+ apt install -y nodejs && \
+ gem install jekyll bundler jekyll-minifier jekyll-sitemap 
+
 COPY . /site/
-WORKDIR /
 
-RUN npm list hugo-cli || npm install hugo-cli -g
+WORKDIR /site
 
-EXPOSE 1313
+EXPOSE 4000
 
-CMD cd site && hugo server --bind 0.0.0.0 -D
+CMD bundle exec jekyll serve --host 0.0.0.0

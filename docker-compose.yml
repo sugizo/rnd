@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  hugo:
+  jekyll:
     build: .
     ports:
-      - "1313:1313"
+      - "4000:4000"
