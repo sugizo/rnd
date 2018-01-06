@@ -1,4 +1,4 @@
-FROM jekyll
+FROM jekyll/jekyll
 
 #LABEL stifix
 
