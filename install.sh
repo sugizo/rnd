@@ -3,32 +3,35 @@
 start=$(date +%s)
 
 # Install Package
-source ~/.rvm/scripts/rvm
-gem install jekyll bundler jekyll-minifier jekyll-sitemap
+mkdir -p ~/project/go/hugo
+cd ~/project/go/hugo
+npm list hugo-cli || npm install hugo-cli
 
-# Create New Site
-mkdir -p ~/project/ruby/jekyll/stifix
-cd ~/project/ruby/jekyll/stifix
+# Initalize Blog
+rm -rf ~/project/go/hugo/stifix
+mkdir -p ~/project/go/hugo/stifix
+#node_modules/.bin/hugo new site stifix
 
 # install app
-rm -f ~/project/ruby/jekyll/stifix/*
-rsync -zavr ~/Cloud/MEGA/Git/jekyll/stifix/ ~/project/ruby/jekyll/stifix/
+rm -rf ~/project/go/hugo/stifix/content/*
+rm -rf ~/project/go/hugo/stifix/layouts/*
+rm -rf ~/project/go/hugo/stifix/public/*
+rm -rf ~/project/go/hugo/stifix/static/*
+rsync -zavr ~/Cloud/MEGA/Git/hugo/stifix/ ~/project/go/hugo/stifix/
 
-# Serve Site
-source ~/.rvm/scripts/rvm
-cd ~/project/ruby/jekyll/stifix
-bundle exec jekyll serve --host 0.0.0.0
+# Run Server
+cd ~/project/go/hugo/stifix
+../node_modules/.bin/hugo server --bind 0.0.0.0 -D
 
 # Access Server via Browser
-#http://localhost:4000
+#http://localhost:1313
 
-# Generated Static Site is on _site folder
-source ~/.rvm/scripts/rvm
-cd ~/project/ruby/jekyll/stifix
-jekyll build
+# Generate Static Site Website on folder public
+cd ~/project/go/hugo/stifix
+../node_modules/.bin/hugo
 
 # Check generated files
-du -hsc ~/project/ruby/jekyll/stifix/_site/
+du -hsc ~/project/go/hugo/stifix/public/
 
 # check public folder change external js and css into internal (save) then concat and minify it
 

@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - 7.0.0
+
+build:
+  cache: true
+  ci:
+    - shippable_retry npm install
+    - npm run hugo
