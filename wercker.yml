@@ -8,3 +8,15 @@ build:
     - script:
         name: compile
         code: npm run compile
+    - script:
+        name: deploy
+        code: |
+          rm -rf sugizo.github.io
+          git clone https://sugizo:${GITHUB_PASSWORD}@github.com/sugizo/sugizo.github.io.git
+          git config --global user.email 'steve.van.christie@gmail.com'
+          git config --global user.name 'sugizo'
+          cp -r public/* sugizo.github.io/
+          cd sugizo.github.io
+          git add --all
+          git commit -m 'From Buddy'
+          git push -u origin master
