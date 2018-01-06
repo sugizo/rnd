@@ -6,7 +6,7 @@ WORKDIR /srv/jekyll
 
 COPY . /srv/jekyll
 
-RUN chown jekyll:jekyll $WORKDIR 
+RUN chown jekyll:jekyll /srv/jekyll
 
 EXPOSE 4000
 
