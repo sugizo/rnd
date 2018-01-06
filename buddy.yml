@@ -19,6 +19,6 @@
     - "git push -u origin master"
     setup_commands:
     - "apt update"
-    - "apt install -y npm nodejs-legacy"
+    - "apt install -y npm nodejs-legacy git"
     - "npm list harp || npm install harp -g"
     trigger_condition: "ALWAYS"
