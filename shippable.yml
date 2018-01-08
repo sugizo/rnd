@@ -1,10 +1,10 @@
-language: node_js
-
-node_js:
-  - 9.0.0
+language: none
 
 build:
   cache: true
+  pre_ci_boot:
+    image_name: ubuntu
+    image_tag: latest
   ci:
     - shippable_retry npm install
     - npm run compile
