@@ -1,7 +1,5 @@
-FROM httpd:latest
+FROM nginx
 
-#LABEL stifix
-
-COPY . /usr/local/apache2/htdocs/
+COPY . /usr/share/nginx/html/
 
 EXPOSE 80
