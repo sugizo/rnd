@@ -1,14 +1,7 @@
-FROM ubuntu:latest
+FROM httpd:2.4
 
 #LABEL stifix
 
-COPY . /site/
-WORKDIR /
+COPY . /usr/local/apache2/htdocs/
 
-RUN apt update && \
- apt install -y npm nodejs-legacy && \
- npm list harp || npm install harp -g
-
-EXPOSE 9000
-
-CMD harp server site
+EXPOSE 80
