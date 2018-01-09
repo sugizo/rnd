@@ -1,5 +1,9 @@
+#FROM httpd:latest
 FROM nginx
 
-COPY . /usr/share/nginx/html/
+#LABEL stifix
+
+#COPY . /usr/local/apache2/htdocs/ # httpd
+COPY . /usr/share/nginx/html/ # nginx
 
 EXPOSE 80
