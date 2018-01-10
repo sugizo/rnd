@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <alex.jenkins.plugins.FileSystemListParameterDefinition plugin="filesystem-list-parameter-plugin@0.0.3">
+          <name>app</name>
+          <description></description>
+          <path>/Users/MacBookPro/Cloud/MEGA/Git/hugo/</path>
+          <selectedType>ALL</selectedType>
+          <sortByLastModified>false</sortByLastModified>
+          <sortReverseOrder>false</sortReverseOrder>
+          <selectedEnumType>ALL</selectedEnumType>
+          <regexIncludePattern></regexIncludePattern>
+          <regexExcludePattern></regexExcludePattern>
+          <formatter>
+            <a class="string-builder"></a>
+            <l>en_ID</l>
+            <zero>0</zero>
+          </formatter>
+        </alex.jenkins.plugins.FileSystemListParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;Install Package&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install Package
+mkdir -p ~/project/go/hugo
+cd ~/project/go/hugo
+npm list hugo-cli || npm install hugo-cli
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Initalize Site&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Initalize Site
+rm -rf ~/project/go/hugo/$app
+mkdir -p ~/project/go/hugo/$app
+#node_modules/.bin/hugo new site $app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Install App&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install App
+rm -rf ~/project/go/hugo/$app/content/*
+rm -rf ~/project/go/hugo/$app/layouts/*
+rm -rf ~/project/go/hugo/$app/public/*
+rm -rf ~/project/go/hugo/$app/static/*
+rsync -zavr ~/Cloud/MEGA/Git/hugo/$app/ ~/project/go/hugo/$app/
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Run Server&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Run Server
+#cd ~/project/go/hugo/$app
+#../node_modules/.bin/hugo server -D
+
+# Access Server via Browser
+#http://localhost:1313
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Generate Static Site Website on folder public&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Generate Static Site Website on folder public
+cd ~/project/go/hugo/$app
+../node_modules/.bin/hugo
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Check generated files&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Check generated files
+du -hsc ~/project/go/hugo/$app/public/
+
+# check public folder change external js and css into internal (save) then concat and minify it
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <alex.jenkins.plugins.FileSystemListParameterDefinition plugin="filesystem-list-parameter-plugin@0.0.3">
+          <name>app</name>
+          <description></description>
+          <path>/Users/MacBookPro/Cloud/MEGA/Git/web2py/</path>
+          <selectedType>ALL</selectedType>
+          <sortByLastModified>false</sortByLastModified>
+          <sortReverseOrder>false</sortReverseOrder>
+          <selectedEnumType>ALL</selectedEnumType>
+          <regexIncludePattern></regexIncludePattern>
+          <regexExcludePattern></regexExcludePattern>
+          <formatter>
+            <a class="string-builder"></a>
+            <l>en_ID</l>
+            <zero>0</zero>
+          </formatter>
+        </alex.jenkins.plugins.FileSystemListParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>install</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>functional_test</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;Remove App&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Remove App
+cd
+rm -rf ~/project/python/web2py/applications/$app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Install App&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install App
+cp -R ~/project/python/web2py/applications/welcome/ ~/project/python/web2py/applications/$app
+rsync -zavr ~/Cloud/MEGA/Git/web2py/$app ~/project/python/web2py/applications/
+rsync -zavur ~/Cloud/MEGA/Git/web2py/$app ~/project/python/web2py/applications/
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Generate Data&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Generate Data
+curl http://127.0.0.1:8000/$app/$install
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Functional Test&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Functional Test
+python ~/project/python/web2py/web2py.py --nogui --no-banner -S $app -M -R ~/project/python/web2py/applications/$app/modules/$app\_$functional_test.py
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

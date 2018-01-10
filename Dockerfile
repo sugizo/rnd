@@ -1,12 +1,7 @@
-FROM httpd:latest
-#FROM nginx:latest
+FROM jenkins/jenkins:lts
 
 #LABEL stifix
 
-# httpd
-COPY . /usr/local/apache2/htdocs/ 
+COPY . /var/jenkins_home/
 
-# nginx
-#COPY . /usr/share/nginx/html/ 
-
-EXPOSE 80
+EXPOSE 8080

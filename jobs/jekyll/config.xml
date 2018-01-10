@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <alex.jenkins.plugins.FileSystemListParameterDefinition plugin="filesystem-list-parameter-plugin@0.0.3">
+          <name>app</name>
+          <description></description>
+          <path>/Users/MacBookPro/Cloud/MEGA/Git/jekyll/</path>
+          <selectedType>ALL</selectedType>
+          <sortByLastModified>false</sortByLastModified>
+          <sortReverseOrder>false</sortReverseOrder>
+          <selectedEnumType>ALL</selectedEnumType>
+          <regexIncludePattern></regexIncludePattern>
+          <regexExcludePattern></regexExcludePattern>
+          <formatter>
+            <a class="string-builder"></a>
+            <l>en_ID</l>
+            <zero>0</zero>
+          </formatter>
+        </alex.jenkins.plugins.FileSystemListParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;Install Package&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install Package
+source ~/.rvm/scripts/rvm
+gem install jekyll bundler jekyll-minifier jekyll-sitemap
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Create New Site&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Create New Site
+mkdir -p ~/project/ruby/jekyll/$app
+cd ~/project/ruby/jekyll/$app
+#git clone https://github.com/andrewbanchich/highlights-jekyll-theme
+#rm -rf ~/project/ruby/jekyll/$app
+#mv highlights-jekyll-theme $app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Install App&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install App
+rm -f ~/project/ruby/jekyll/$app/*
+rsync -zavr ~/Cloud/MEGA/Git/jekyll/$app/ ~/project/ruby/jekyll/$app/
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Serve Site&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Serve Site
+#source ~/.rvm/scripts/rvm
+#cd ~/project/ruby/jekyll/$app
+#bundle exec jekyll serve --host 0.0.0.0
+
+# Access Server via Browser
+#http://localhost:4000
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Generated Static Site is on _site folder&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Generated Static Site is on _site folder
+source ~/.rvm/scripts/rvm
+cd ~/project/ruby/jekyll/$app
+jekyll build
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Check generated files&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Check generated files
+du -hsc ~/project/ruby/jekyll/$app/_site/
+
+# check public folder change external js and css into internal (save) then concat and minify it
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
