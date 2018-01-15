@@ -1,34 +1,25 @@
-#!/bin/sh
+# Install Package
+mkdir -p ~/project/coffee/wintersmith
+cd ~/project/coffee/wintersmith
+npm list wintersmith || npm install wintersmith
 
-# clear
-clear
+# New Site
+#./node_modules/.bin/wintersmith new stifix
 
-# Download Package
-cd ~/Downloads
-curl -L -O -C - http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+# install app
+mkdir -p ~/project/coffee/wintersmith/stifix/
+rm -rf ~/project/coffee/wintersmith/stifix/*
+rsync -avuzr ~/Cloud/MEGA/Git/wintersmith/stifix/* ~/project/coffee/wintersmith/stifix/
 
-# sync data
-rm -rf ~/.jenkins/jobs/*
-rsync -avuzr ~/Cloud/MEGA/Git/jenkins/jobs/* ~/.jenkins/jobs/
+# Run App
+cd stifix
+../node_modules/.bin/wintersmith preview
 
-# clear caches
-rm -rf ~/.jenkins/caches/*
+# Check App on Browser
+http://localhost:8080
 
-# clear log
-rm -rf ~/.jenkins/logs/*
+# Compile App
+../node_modules/.bin/wintersmith build
 
-# clear workspace
-rm -rf ~/.jenkins/workspace/*
-
-# Start Application
-cd ~/Downloads
-java -jar jenkins.war
-
-#http://localhost:8080
-
-# Check Password Jenkins
-cat ~/.jenkins/secrets/initialAdminPassword
-
-#http://localhost:8080/reload
-
-echo 'Done'
+# Check generated files
+du -hsc ~/project/coffee/wintersmith/stifix/build
