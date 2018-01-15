@@ -6,7 +6,7 @@ build:
         name: install
         code: npm install
     - script:
-        name: builds
+        name: build
         code: npm run build
     - script:
         name: deploy
