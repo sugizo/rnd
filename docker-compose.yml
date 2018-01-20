@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  hexo:
+  web2py_rocket:
     build: .
     ports:
-      - "8080:8080"
+      - "443:443"
     volumes:
-      - site:/site
+      - applications:/web2py/applications
 
 volumes:
-  site:
+  applications:
