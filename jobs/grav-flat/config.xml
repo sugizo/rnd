@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <alex.jenkins.plugins.FileSystemListParameterDefinition plugin="filesystem-list-parameter-plugin@0.0.3">
+          <name>app</name>
+          <description></description>
+          <path>/Users/MacBookPro/Cloud/MEGA/Git/grav/</path>
+          <selectedType>ALL</selectedType>
+          <sortByLastModified>false</sortByLastModified>
+          <sortReverseOrder>false</sortReverseOrder>
+          <selectedEnumType>ALL</selectedEnumType>
+          <regexIncludePattern></regexIncludePattern>
+          <regexExcludePattern></regexExcludePattern>
+          <formatter>
+            <a class="string-builder"></a>
+            <l>en_ID</l>
+            <zero>0</zero>
+          </formatter>
+        </alex.jenkins.plugins.FileSystemListParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;download grav&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# download grav
+cd ~/Downloads/
+curl -L -O -C - https://github.com/getgrav/grav/releases/download/1.3.7/grav-admin-v1.3.7.zip
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;extract grav&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# extract grav
+cd ~/Downloads/
+unzip ~/Downloads/grav-admin-*.zip
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;remove existing folder&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# remove existing folder
+sudo chmod -R 777 /Applications/XAMPP/xamppfiles/htdocs/$app
+rm -rf /Applications/XAMPP/xamppfiles/htdocs/$app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;move folder&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# move folder
+mv ~/Downloads/grav-admin /Applications/XAMPP/xamppfiles/htdocs/$app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;remove unncessary plugins&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# remove unncessary plugins
+rm -rf /Applications/XAMPP/xamppfiles/htdocs/$app/user/plugins/markdown-notices
+rm -rf /Applications/XAMPP/xamppfiles/htdocs/$app/user/plugins/problems
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;change admin url&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# change admin url
+#sed -i '' "s/route: '\\/admin'/route: '\\/xjapan'/g" /Applications/XAMPP/xamppfiles/htdocs/$app/user/plugins/admin/admin.yaml
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;change permission&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# change permission
+sudo chmod -R 777 /Applications/XAMPP/xamppfiles/htdocs/$app
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;remove unncessary theme file&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# remove unncessary theme file
+rm -f /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/*/*.md
+rm -f /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/*/*.jpg
+rm -f /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/*/LICENSE
+rm -f /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/.gitkeep
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;update favicon&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# update favicon
+rm -f /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/*/images/favicon.png
+rsync -avuzr ~/Cloud/MEGA/Images/imagemin/$app/logo/$app-32x32.png /Applications/XAMPP/xamppfiles/htdocs/$app/user/themes/*/images/favicon.png
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;install minify-html plugin&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# install minify-html plugin
+cd /Applications/XAMPP/xamppfiles/htdocs/$app
+sudo bin/gpm install minify-html
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;compress minify-html plugin then upload to server&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# compress minify-html plugin then upload to server
+rm -f ~/Downloads/minify-html.zip
+rm -rf ~/Downloads/minify-html
+cd /Applications/XAMPP/xamppfiles/htdocs/$app
+zip -r -X ~/Downloads/minify-html.zip user/plugins/minify-html
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;install sitemap plugin&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# install sitemap plugin
+cd /Applications/XAMPP/xamppfiles/htdocs/$app
+sudo bin/gpm install sitemap
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;compress sitemap plugin then upload to server&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# compress sitemap plugin then upload to server
+rm -f ~/Downloads/sitemap.zip
+rm -rf ~/Downloads/sitemap
+cd /Applications/XAMPP/xamppfiles/htdocs/$app
+zip -r -X ~/Downloads/sitemap.zip user/plugins/sitemap
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;clear cache&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# clear cache
+cd /Applications/XAMPP/xamppfiles/htdocs/$app
+sudo bin/grav clear-cache
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

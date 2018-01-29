@@ -1,12 +1,12 @@
-version: '3'
+version: '3.1'
 
 services:
-  web2py_rocket:
+  jenkins:
     build: .
     ports:
-      - "443:443"
+      - "8080:8080"
     volumes:
-      - applications:/web2py/applications
+      - jenkins:/root/.jenkins/
 
 volumes:
-  applications:
+  jenkins:

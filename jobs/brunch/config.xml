@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>app</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;Preparation&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Preparation
+rm -rf  ~/project/js/brunch/app/*
+mkdir -p ~/project/js/brunch/app/{css,js}
+rsync -ravz ~/Cloud/MEGA/Git/brunch/* ~/project/js/brunch/
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Install&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install
+cd ~/project/js/brunch
+npm install
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Build&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Build
+cd ~/project/js/brunch
+node_modules/.bin/brunch build
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Run Server&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Run Server
+#cd ~/project/js/brunch
+#node_modules/.bin/brunch watch --server
+
+# Access Site via Browser
+#http://localhost:3333
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

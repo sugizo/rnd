@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.2.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.2.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <alex.jenkins.plugins.FileSystemListParameterDefinition plugin="filesystem-list-parameter-plugin@0.0.3">
+          <name>app</name>
+          <description></description>
+          <path>/Users/MacBookPro/Cloud/MEGA/Git/jigsaw/</path>
+          <selectedType>ALL</selectedType>
+          <sortByLastModified>false</sortByLastModified>
+          <sortReverseOrder>false</sortReverseOrder>
+          <selectedEnumType>ALL</selectedEnumType>
+          <regexIncludePattern></regexIncludePattern>
+          <regexExcludePattern></regexExcludePattern>
+          <formatter>
+            <a class="string-builder"></a>
+            <l>en_ID</l>
+            <zero>0</zero>
+          </formatter>
+        </alex.jenkins.plugins.FileSystemListParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.42">
+    <script>
+pipeline {
+    agent any
+
+    stages {
+        stage(&apos;Install Jigsaw via Composer&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Create folder
+mkdir -p ~/project/php/jigsaw/$app
+cd ~/project/php/jigsaw/$app
+
+# Install Jigsaw via Composer
+composer show | grep jigsaw || composer require tightenco/jigsaw
+#composer install
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Initialize a new project in the current folder&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Initialize a new project in the current folder
+#./vendor/bin/jigsaw init
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Install App&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Install App
+rm -rf ~/project/php/jigsaw/$app/build_local/*
+rm -rf ~/project/php/jigsaw/$app/source/*
+rsync -avzr ~/Cloud/MEGA/Git/Jigsaw/$app/* ~/project/php/jigsaw/$app/
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Build site&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Build site
+cd ~/project/php/jigsaw/$app
+./vendor/bin/jigsaw build
+&apos;&apos;&apos;
+            }
+        }
+        stage(&apos;Run Web Server&apos;) {
+            steps {
+                sh &apos;&apos;&apos;
+# Run Web Server
+#cd ~/project/php/jigsaw/$app/build_local
+#python -m SimpleHTTPServer 8000
+&apos;&apos;&apos;
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

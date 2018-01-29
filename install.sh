@@ -1,64 +1,34 @@
 #!/bin/sh
 
-# change administration with web2py app
+# clear
+clear
 
-start=$(date +%s)
+# Download Package
+cd ~/Downloads
+curl -L -O -C - http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 
-case $HOSTNAME in
-	(MacBook.local) 
-		# remove existing app
-		cd
-		rm -rf ~/project/python/web2py/applications/administration
+# sync data
+rm -rf ~/.jenkins/jobs/*
+rsync -avuzr ~/Cloud/MEGA/Git/jenkins/jobs/* ~/.jenkins/jobs/
 
-		# copy webapp
-		cp -R ~/project/python/web2py/applications/welcome/ ~/project/python/web2py/applications/administration
-		rsync -zavr ~/Cloud/MEGA/Git/web2py/administration ~/project/python/web2py/applications/
-		rsync -zavur ~/Cloud/MEGA/Git/web2py/administration ~/project/python/web2py/applications/
+# clear caches
+rm -rf ~/.jenkins/caches/*
 
-		# install demo with python
-		#python ~/project/python/web2py/web2py.py --nogui --no-banner -S administration -M -R ~/project/python/web2py/applications/administration/modules/administration_install_demo.py
+# clear log
+rm -rf ~/.jenkins/logs/*
 
-		# install with python
-		#python ~/project/python/web2py/web2py.py --nogui --no-banner -S administration -M -R ~/project/python/web2py/applications/administration/modules/administration_install.py
+# clear workspace
+rm -rf ~/.jenkins/workspace/*
 
-		# install demo with curl
-		#curl http://127.0.0.1:8000/administration/install_demo
+# Start Application
+cd ~/Downloads
+java -jar jenkins.war
 
-		# install with curl
-		curl http://127.0.0.1:8000/administration/install
+#http://localhost:8080
 
-		# functional test
-		python ~/project/python/web2py/web2py.py --nogui --no-banner -S administration -M -R ~/project/python/web2py/applications/administration/modules/administration_functional_test.py
-		;;
-	# others default or pythonanywhere
-	(*)
-		# make folders for appdata
-		cd
-		mkdir -p ~/appdata/databases
-		mkdir -p ~/appdata/uploads
-		mkdir -p ~/appdata/webapp
+# Check Password Jenkins
+cat ~/.jenkins/secrets/initialAdminPassword
 
-		# change permission for appdata folder
-		chmod 777 -R ~/appdata/
+#http://localhost:8080/reload
 
-		# backup database
-		rsync -zavr ~/web2py/applications/administration/databases/administration.sqlite ~/appdata/databases/
-
-		# backup uploads
-		rsync -zavr ~/web2py/applications/administration/uploads/* ~/appdata/uploads/
-
-		# backup webapp
-		rsync -zavr ~/web2py/applications/administration ~/appdata/webapp/
-
-		# remove existing web2py app
-		rm -rf ~/web2py/applications/administration
-
-		# upload web2py packed app through admin
-		;;
-esac
-
-end=$(date +%s)
-diff=$(( $end - $start ))
-
-echo Duration = $diff Seconds
-echo Finished at = `date +%Y-%m-%d\ %H:%M:%S`
+echo 'Done'
